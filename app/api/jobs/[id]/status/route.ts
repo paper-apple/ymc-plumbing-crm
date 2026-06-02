@@ -2,7 +2,7 @@ import { NextRequest, NextResponse }
 from "next/server";
 
 import { prisma } from "@/lib/db";
-import { sendSlackMessage } from "@/lib/slack";
+import { runJobAutomation } from "@/lib/automation";
 
 export async function PATCH(
   request: NextRequest,
@@ -29,29 +29,10 @@ export async function PATCH(
     return updated;
   });
 
-  try {
-    await sendSlackMessage(`Job ${job.id} status -> ${job.status}`);
-
-    await prisma.eventLog.create({
-      data: {
-        jobId: job.id,
-        type: "SLACK",
-        message: "Slack notification sent",
-      },
-    });
-  } catch (error) {
-    console.error(error);
-
-    await prisma.eventLog.create({
-      data: {
-        jobId: job.id,
-        type: "SLACK_ERROR",
-        message:
-          "Failed to send Slack notification",
-      },
-    });
-  }
-
+  await runJobAutomation(
+    job.id,
+    `STATUS CHANGED → ${job.status}`
+  );
   
   return NextResponse.json(job);
 }
