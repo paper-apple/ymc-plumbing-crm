@@ -4,11 +4,12 @@ import { useEffect, useState } from "react";
 
 import LeadList from "@/app/components/LeadList";
 import { Lead } from "@/types/lead";
+import CreateJobModal from "@/app/components/CreateJobModal";
 
 export default function Home() {
   const [leads, setLeads] = useState<Lead[]>([]);
-  const [selectedLead, setSelectedLead] =
-    useState<Lead | null>(null);
+  const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
+  const [isModalOpen, setIsModalOpen] =useState(false);
 
   useEffect(() => {
     fetch("/api/leads")
@@ -55,7 +56,10 @@ export default function Home() {
               </p>
             </div>
 
-            <button className="mt-8 px-4 py-2 rounded bg-black text-white">
+            <button
+              onClick={() => setIsModalOpen(true)}
+              className="mt-8 px-4 py-2 rounded bg-black text-white"
+            >   
               Create Job
             </button>
           </>
@@ -63,6 +67,13 @@ export default function Home() {
           <p>Select a lead</p>
         )}
       </div>
+      {selectedLead && (
+        <CreateJobModal
+          lead={selectedLead}
+          open={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+        />
+      )};
     </main>
   );
 }
