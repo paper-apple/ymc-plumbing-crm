@@ -5,11 +5,23 @@ import { useEffect, useState } from "react";
 import LeadList from "@/app/components/LeadList";
 import { Lead } from "@/types/lead";
 import CreateJobModal from "@/app/components/CreateJobModal";
+import { Job } from "@/types/job";
+import JobBoard from "@/app/components/JobBoard";
 
 export default function Home() {
   const [leads, setLeads] = useState<Lead[]>([]);
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
   const [isModalOpen, setIsModalOpen] =useState(false);
+  const [jobs, setJobs] = useState<Job[]>([]);
+  
+  const loadJobs = async () => {
+    const response =
+      await fetch("/api/jobs/list");
+
+    const data = await response.json();
+
+    setJobs(data);
+  };
 
   useEffect(() => {
     fetch("/api/leads")
@@ -21,7 +33,29 @@ export default function Home() {
           setSelectedLead(data[0]);
         }
       });
+    loadJobs();
   }, []);
+
+  const updateStatus = async (
+    id: number,
+    status: string
+  ) => {
+    await fetch(
+      `/api/jobs/${id}/status`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type":
+            "application/json",
+        },
+        body: JSON.stringify({
+          status,
+        }),
+      }
+    );
+
+    await loadJobs();
+  };
 
   return (
     <main className="grid grid-cols-[320px_1fr] h-screen">
@@ -66,6 +100,13 @@ export default function Home() {
         ) : (
           <p>Select a lead</p>
         )}
+      </div>
+      <div className="mt-12">
+        <JobBoard 
+          jobs={jobs} 
+          onStatusChange={updateStatus}
+        />
+        
       </div>
       {selectedLead && (
         <CreateJobModal
