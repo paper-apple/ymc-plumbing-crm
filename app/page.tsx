@@ -7,13 +7,16 @@ import { Lead } from "@/types/lead";
 import CreateJobModal from "@/app/components/CreateJobModal";
 import { Job } from "@/types/job";
 import JobBoard from "@/app/components/JobBoard";
+import EventLog from "@/app/components/EventLog";
+import { EventLog as EventType } from "@/types/event";
 
 export default function Home() {
   const [leads, setLeads] = useState<Lead[]>([]);
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
   const [isModalOpen, setIsModalOpen] =useState(false);
   const [jobs, setJobs] = useState<Job[]>([]);
-  
+  const [events, setEvents] = useState<EventType[]>([]);
+
   const loadJobs = async () => {
     const response =
       await fetch("/api/jobs/list");
@@ -23,18 +26,15 @@ export default function Home() {
     setJobs(data);
   };
 
-  useEffect(() => {
-    fetch("/api/leads")
-      .then((res) => res.json())
-      .then((data) => {
-        setLeads(data);
+  const loadEvents = async () => {
+    const response =
+      await fetch("/api/events");
 
-        if (data.length > 0) {
-          setSelectedLead(data[0]);
-        }
-      });
-    loadJobs();
-  }, []);
+    const data =
+      await response.json();
+
+    setEvents(data);
+  };
 
   const updateStatus = async (
     id: number,
@@ -55,7 +55,22 @@ export default function Home() {
     );
 
     await loadJobs();
+    await loadEvents();
   };
+
+  useEffect(() => {
+    fetch("/api/leads")
+      .then((res) => res.json())
+      .then((data) => {
+        setLeads(data);
+
+        if (data.length > 0) {
+          setSelectedLead(data[0]);
+        }
+      });
+    loadJobs();
+    loadEvents();
+  }, []);
 
   return (
     <main className="grid grid-cols-[320px_1fr] h-screen">
@@ -106,13 +121,17 @@ export default function Home() {
           jobs={jobs} 
           onStatusChange={updateStatus}
         />
-        
+      </div>
+      <div className="mt-12">
+        <EventLog events={events} />
       </div>
       {selectedLead && (
         <CreateJobModal
           lead={selectedLead}
           open={isModalOpen}
           onClose={() => setIsModalOpen(false)}
+          loadJobs={loadJobs}
+          loadEvents={loadEvents}
         />
       )};
     </main>

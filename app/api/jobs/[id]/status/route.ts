@@ -17,15 +17,28 @@ export async function PATCH(
   const body =
     await request.json();
 
-  const job =
-    await prisma.job.update({
-      where: {
-        id: Number(id),
-      },
-      data: {
-        status: body.status,
-      },
-    });
+  const result = await prisma.$transaction(
+    async (tx) => {
+      const job = await tx.job.update({
+        where: {
+          id: Number(id),
+        },
+        data: {
+          status: body.status,
+        },
+      });
 
-  return NextResponse.json(job);
+      await tx.eventLog.create({
+        data: {
+          jobId: job.id,
+          type: "STATUS_CHANGED",
+          message: `Status changed to ${body.status}`,
+        },
+      });
+
+      return job;
+    }
+  );
+
+  return NextResponse.json(result);
 }

@@ -18,12 +18,16 @@ interface Props {
   lead: Lead;
   open: boolean;
   onClose: () => void;
+  loadJobs: () => void;
+  loadEvents: () => void;
 }
 
 export default function CreateJobModal({
   lead,
   open,
   onClose,
+  loadJobs,
+  loadEvents,
 }: Props) {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
@@ -57,6 +61,9 @@ export default function CreateJobModal({
         throw new Error();
       }
 
+      await loadJobs();
+      await loadEvents();
+      
       setSuccess(true);
 
       setTimeout(() => {
