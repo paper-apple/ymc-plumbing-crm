@@ -30,6 +30,10 @@ export default function JobBoard({
             </div>
 
             <div>
+              Job ID: {job.id}
+            </div>
+            
+            <div>
               {job.jobType}
             </div>
 

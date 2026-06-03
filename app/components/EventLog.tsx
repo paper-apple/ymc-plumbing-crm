@@ -20,6 +20,10 @@ export default function EventLog({
             className="border rounded p-3"
           >
             <div className="font-medium">
+              Job ID: {event.jobId}
+            </div>
+
+            <div className="font-medium">
               {event.type}
             </div>
 
