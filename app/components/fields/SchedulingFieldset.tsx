@@ -1,34 +1,42 @@
-export default function SchedulingFieldset({ register }: { register: any }) {
+import FieldWrapper from "./FieldWrapper";
+import { getFieldClasses } from "@/lib/fieldClasses";
+
+export default function SchedulingFieldset({ register, errors }: { register: any, errors: any }) {
   return (
     <div>
-      <h3 className="font-semibold mb-2">
-        Scheduling
-      </h3>
-
+      <h3 className="font-semibold mb-2">Scheduling</h3>
       <div className="grid gap-3">
-        <input
-          type="date"
-          {...register("startDate")}
-          className="border p-2 rounded"
-        />
+        <FieldWrapper error={errors.startDate}>
+          <input
+            type="date"
+            {...register("startDate")}
+            className={getFieldClasses(!!errors.startDate)}
+          />
+        </FieldWrapper>
 
-        <input
-          type="time"
-          {...register("startTime")}
-          className="border p-2 rounded"
-        />
+        <FieldWrapper error={errors.startTime}>
+          <input
+            type="time"
+            {...register("startTime")}
+            className={getFieldClasses(!!errors.startTime)}
+          />
+        </FieldWrapper>
 
-        <input
-          type="time"
-          {...register("endTime")}
-          className="border p-2 rounded"
-        />
+        <FieldWrapper error={errors.endTime}>
+          <input
+            type="time"
+            {...register("endTime")}
+            className={getFieldClasses(!!errors.endTime)}
+          />
+        </FieldWrapper>
 
-        <input
-          {...register("technician")}
-          placeholder="Technician"
-          className="border p-2 rounded"
-        />
+        <FieldWrapper error={errors.technician}>
+          <input
+            {...register("technician")}
+            placeholder="Technician"
+            className={getFieldClasses(!!errors.technician)}
+          />
+        </FieldWrapper>
       </div>
     </div>
   );

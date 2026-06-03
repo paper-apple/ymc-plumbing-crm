@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createLeadSchema, CreateLeadFormData} from "@/schemas/createLeadSchema";
+import FieldWrapper from "./fields/FieldWrapper";
+import { getFieldClasses } from "@/lib/fieldClasses";
 
 interface Props {
   open: boolean;
@@ -26,6 +28,7 @@ export default function CreateLeadModal({
     reset,
     formState: {
       isSubmitting,
+      errors,
     },
   } = useForm<CreateLeadFormData>({resolver: zodResolver(createLeadSchema)});
 
@@ -66,7 +69,7 @@ export default function CreateLeadModal({
 
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center">
-      <div className="bg-white w-[500px] rounded-lg p-6">
+      <div className="bg-gray-700 w-[500px] rounded-lg p-6">
 
         <div className="flex justify-between">
           <h2 className="text-2xl font-bold">
@@ -86,37 +89,38 @@ export default function CreateLeadModal({
           )}
           className="mt-6 space-y-3"
         >
-          <input
-            {...register(
-              "firstName"
-            )}
-            placeholder="First Name"
-            className="border p-2 rounded w-full"
-          />
+          
+          <FieldWrapper error={errors.firstName}>
+            <input
+              {...register("firstName")}
+              placeholder="First Name"
+              className={getFieldClasses(!!errors.firstName)}
+            />
+          </FieldWrapper>
 
-          <input
-            {...register(
-              "lastName"
-            )}
-            placeholder="Last Name"
-            className="border p-2 rounded w-full"
-          />
+          <FieldWrapper error={errors.lastName}>
+            <input
+              {...register("lastName")}
+              placeholder="Last Name"
+              className={getFieldClasses(!!errors.lastName)}
+            />
+          </FieldWrapper>
 
-          <input
-            {...register(
-              "phone"
-            )}
-            placeholder="Phone"
-            className="border p-2 rounded w-full"
-          />
+          <FieldWrapper error={errors.phone}>
+            <input
+              {...register("phone")}
+              placeholder="Phone"
+              className={getFieldClasses(!!errors.phone)}
+            />
+          </FieldWrapper>
 
-          <input
-            {...register(
-              "email"
-            )}
-            placeholder="Email"
-            className="border p-2 rounded w-full"
-          />
+          <FieldWrapper error={errors.email}>
+            <input
+              {...register("email")}
+              placeholder="Email"
+              className={getFieldClasses(!!errors.email)}
+            />
+          </FieldWrapper>
 
           {error && (
             <p className="text-red-500">

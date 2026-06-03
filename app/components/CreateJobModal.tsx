@@ -102,9 +102,9 @@ export default function CreateJobModal({
           className="mt-6 space-y-6 flex-1 overflow-y-auto pr-2"
           style={{ maxHeight: "60vh" }}
         >
-          <JobDetailsFieldset register={register} />
-          <ServiceLocationFieldset register={register} />
-          <SchedulingFieldset register={register} />
+          <JobDetailsFieldset register={register} errors={errors} />
+          <ServiceLocationFieldset register={register} errors={errors} />
+          <SchedulingFieldset register={register} errors={errors} />
           {error && (
             <p className="text-red-500">
               {error}

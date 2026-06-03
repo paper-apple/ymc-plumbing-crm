@@ -1,28 +1,42 @@
-export default function ServiceLocationFieldset({ register }: { register: any }) {
+import FieldWrapper from "./FieldWrapper";
+import { getFieldClasses } from "@/lib/fieldClasses";
+
+export default function ServiceLocationFieldset({ register, errors }: { register: any, errors: any }) {
   return (
     <div>
       <h3 className="font-semibold mb-2">Service Location</h3>
       <div className="grid gap-3">
-        <input 
-          {...register("address")} 
-          placeholder="Address" 
-          className="border p-2 rounded" 
-        />
-        <input 
-          {...register("city")} 
-          placeholder="City" 
-          className="border p-2 rounded" 
-        />
-        <input 
-          {...register("zip")} 
-          placeholder="ZIP" 
-          className="border p-2 rounded" 
-        />
-        <input 
-          {...register("area")} 
-          placeholder="Area" 
-          className="border p-2 rounded" 
-        />
+        <FieldWrapper error={errors.address}>
+          <input
+            {...register("address")}
+            placeholder="Address"
+            className={getFieldClasses(!!errors.address)}
+          />
+        </FieldWrapper>
+
+        <FieldWrapper error={errors.city}>
+          <input
+            {...register("city")}
+            placeholder="City"
+            className={getFieldClasses(!!errors.city)}
+          />
+        </FieldWrapper>
+
+        <FieldWrapper error={errors.zip}>
+          <input
+            {...register("zip")}
+            placeholder="ZIP"
+            className={getFieldClasses(!!errors.zip)}
+          />
+        </FieldWrapper>
+
+        <FieldWrapper error={errors.area}>
+          <input
+            {...register("area")}
+            placeholder="Area"
+            className={getFieldClasses(!!errors.area)}
+          />
+        </FieldWrapper>
       </div>
     </div>
   );
