@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-
 import LeadList from "@/app/components/LeadList";
 import { Lead } from "@/types/lead";
 import CreateJobModal from "@/app/components/CreateJobModal";
@@ -9,6 +8,7 @@ import { Job } from "@/types/job";
 import JobBoard from "@/app/components/JobBoard";
 import EventLog from "@/app/components/EventLog";
 import { EventLog as EventType } from "@/types/event";
+import CreateLeadModal from "@/app/components/CreateLeadModal";
 
 export default function Home() {
   const [leads, setLeads] = useState<Lead[]>([]);
@@ -16,10 +16,10 @@ export default function Home() {
   const [isModalOpen, setIsModalOpen] =useState(false);
   const [jobs, setJobs] = useState<Job[]>([]);
   const [events, setEvents] = useState<EventType[]>([]);
+  const [isLeadModalOpen, setIsLeadModalOpen] = useState(false);
 
   const loadJobs = async () => {
-    const response =
-      await fetch("/api/jobs/list");
+    const response = await fetch("/api/jobs/list");
 
     const data = await response.json();
 
@@ -27,13 +27,25 @@ export default function Home() {
   };
 
   const loadEvents = async () => {
-    const response =
-      await fetch("/api/events");
+    const response = await fetch("/api/events");
 
-    const data =
-      await response.json();
+    const data = await response.json();
 
     setEvents(data);
+  };
+
+  const loadLeads = async () => {
+    const response = await fetch("/api/leads");
+
+    const data = await response.json();
+
+    setLeads(data);
+
+    if (
+      data.length > 0 && !selectedLead
+    ) {
+      setSelectedLead(data[0]);
+    }
   };
 
   const updateStatus = async (
@@ -44,13 +56,8 @@ export default function Home() {
       `/api/jobs/${id}/status`,
       {
         method: "PATCH",
-        headers: {
-          "Content-Type":
-            "application/json",
-        },
-        body: JSON.stringify({
-          status,
-        }),
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({status}),
       }
     );
 
@@ -58,16 +65,16 @@ export default function Home() {
     await loadEvents();
   };
 
-  useEffect(() => {
-    fetch("/api/leads")
-      .then((res) => res.json())
-      .then((data) => {
-        setLeads(data);
+  const refreshAll = async () => {
+    await Promise.all([
+      loadLeads(),
+      loadJobs(),
+      loadEvents(),
+    ]);
+  };
 
-        if (data.length > 0) {
-          setSelectedLead(data[0]);
-        }
-      });
+  useEffect(() => {
+    loadLeads();
     loadJobs();
     loadEvents();
   }, []);
@@ -78,6 +85,7 @@ export default function Home() {
         leads={leads}
         selectedLead={selectedLead}
         onSelect={setSelectedLead}
+        onCreateLead={() => setIsLeadModalOpen(true)}
       />
 
       <div className="p-8">
@@ -134,6 +142,11 @@ export default function Home() {
           loadEvents={loadEvents}
         />
       )};
+      <CreateLeadModal
+        open={isLeadModalOpen}
+        onClose={() => setIsLeadModalOpen(false)}
+        onLeadCreated={refreshAll}
+      />
     </main>
   );
 }
