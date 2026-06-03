@@ -24,7 +24,7 @@ export default function LeadList({
           onClick={onCreateLead}
           className="px-3 py-1 bg-black text-white rounded"
         >
-          +
+          Create lead
         </button>
       </div>
       <div className="space-y-2">
@@ -41,10 +41,7 @@ export default function LeadList({
             <div>
               {lead.firstName} {lead.lastName}
             </div>
-
-            <div className="text-sm text-gray-500">
-              {lead.phone}
-            </div>
+            
           </button>
         ))}
       </div>

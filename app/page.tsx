@@ -13,7 +13,7 @@ import CreateLeadModal from "@/app/components/CreateLeadModal";
 export default function Home() {
   const [leads, setLeads] = useState<Lead[]>([]);
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
-  const [isModalOpen, setIsModalOpen] =useState(false);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [jobs, setJobs] = useState<Job[]>([]);
   const [events, setEvents] = useState<EventType[]>([]);
   const [isLeadModalOpen, setIsLeadModalOpen] = useState(false);
@@ -23,7 +23,11 @@ export default function Home() {
 
     const data = await response.json();
 
-    setJobs(data);
+    const selectedJobs = data.filter(
+      (job: Job) => job.leadId === selectedLead?.id
+    );
+
+    setJobs(selectedJobs);
   };
 
   const loadEvents = async () => {
@@ -31,7 +35,12 @@ export default function Home() {
 
     const data = await response.json();
 
-    setEvents(data);
+    const jobIds = jobs.map(job => job.id);
+    const selectedEvents = data.filter(
+      (event: EventType) => jobIds.includes(event.jobId)
+    );
+
+    setEvents(selectedEvents);
   };
 
   const loadLeads = async () => {
@@ -79,8 +88,32 @@ export default function Home() {
     loadEvents();
   }, []);
 
+  useEffect(() => {
+    loadLeads();
+    loadJobs();
+    loadEvents();
+  }, [selectedLead]);
+
+  useEffect(() => {
+    if (!selectedLead) return;
+
+    const loadJobsForLead = async () => {
+      await loadJobs();
+    };
+
+    loadJobsForLead();
+  }, [selectedLead]);
+
+  useEffect(() => {
+    const loadEventsForJobs = async () => {
+      await loadEvents();
+    };
+
+    loadEventsForJobs();
+  }, [jobs]);
+
   return (
-    <main className="grid grid-cols-[320px_1fr] h-screen">
+    <main className="grid grid-cols-[320px_320px_2fr_1fr] h-screen overflow-y-hidden">
       <LeadList
         leads={leads}
         selectedLead={selectedLead}
@@ -88,10 +121,10 @@ export default function Home() {
         onCreateLead={() => setIsLeadModalOpen(true)}
       />
 
-      <div className="p-8">
+      <div className="p-4 border-r">
         {selectedLead ? (
           <>
-            <h1 className="text-3xl font-bold">
+            <h1 className="font-bold text-xl">
               Lead Details
             </h1>
 
@@ -112,41 +145,35 @@ export default function Home() {
                 {selectedLead.email || "-"}
               </p>
             </div>
-
-            <button
-              onClick={() => setIsModalOpen(true)}
-              className="mt-8 px-4 py-2 rounded bg-black text-white"
-            >   
-              Create Job
-            </button>
           </>
         ) : (
           <p>Select a lead</p>
         )}
       </div>
-      <div className="mt-12">
+      <div>
         <JobBoard 
           jobs={jobs} 
           onStatusChange={updateStatus}
+          onClick={() => setIsCreateModalOpen(true)}
         />
       </div>
-      <div className="mt-12">
+      <div>
         <EventLog events={events} />
       </div>
       {selectedLead && (
         <CreateJobModal
           lead={selectedLead}
-          open={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
+          open={isCreateModalOpen}
+          onClose={() => setIsCreateModalOpen(false)}
           loadJobs={loadJobs}
           loadEvents={loadEvents}
         />
-      )};
+      )}
       <CreateLeadModal
         open={isLeadModalOpen}
         onClose={() => setIsLeadModalOpen(false)}
         onLeadCreated={refreshAll}
       />
     </main>
-  );
+  )
 }

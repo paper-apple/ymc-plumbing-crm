@@ -7,7 +7,7 @@ interface FieldWrapperProps {
 
 export default function FieldWrapper({ error, children }: FieldWrapperProps) {
   return (
-    <div className="space-y-1">
+    <div className="space-y-1 w-full">
       {children}
       {error ? (
         <p className="text-red-500 text-sm h-4">{error.message}</p>

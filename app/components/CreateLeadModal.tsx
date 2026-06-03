@@ -67,19 +67,25 @@ export default function CreateLeadModal({
     }
   };
 
+  const handleClose = () => {
+    onClose();
+    reset();
+  };
+
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center">
-      <div className="bg-gray-700 w-[500px] rounded-lg p-6">
+      <div className="bg-white w-[500px] rounded-lg p-6">
 
-        <div className="flex justify-between">
-          <h2 className="text-2xl font-bold">
+        <div className="flex justify-between border-b border-gray-300 pb-4">
+          <h2 className="text-xl font-bold">
             Create Lead
           </h2>
 
-          <button
-            onClick={onClose}
+          <button 
+            onClick={handleClose}
+            className="bg-black text-white text-xl px-2 py-0.5 rounded"
           >
-            Close
+            ✕
           </button>
         </div>
 

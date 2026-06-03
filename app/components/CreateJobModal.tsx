@@ -35,6 +35,7 @@ export default function CreateJobModal({
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors, isSubmitting },
   } = useForm<CreateJobFormData>({
     resolver: zodResolver(createJobSchema),
@@ -74,33 +75,38 @@ export default function CreateJobModal({
     }
   };
 
+  const handleClose = () => {
+    onClose();
+    reset();
+  };
+
   if (!open) return null;
 
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center">
-      <div className="bg-gray-500 w-[800px] rounded-lg p-6 max-h-[90vh] overflow-hidden flex flex-col">
+      <div className="bg-white w-[800px] rounded-lg p-6 h-screen flex flex-col">
         <div className="flex justify-between items-center pb-4 border-b border-gray-300">
-          <h2 className="text-2xl font-bold">
+          <h2 className="text-xl font-bold">
             Create Job
           </h2>
 
-          <button onClick={onClose}>
-            Close
+          <button 
+            onClick={handleClose}
+            className="bg-black text-white text-xl px-2 py-0.5 rounded"
+          >
+            ✕
           </button>
         </div>
 
-        <div className="mt-6">
+        <div className="mt-3">
           <p>
             Customer: {lead.firstName}{" "}
-            {lead.lastName}
+            {lead.lastName}{" | "}{lead.phone}
           </p>
-
-          <p>{lead.phone}</p>
         </div>
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="mt-6 space-y-6 flex-1 overflow-y-auto pr-2"
-          style={{ maxHeight: "60vh" }}
+          className="mt-3 space-y-2 flex-1 pr-2"
         >
           <JobDetailsFieldset register={register} errors={errors} />
           <ServiceLocationFieldset register={register} errors={errors} />
