@@ -40,9 +40,9 @@ export default function JobBoard({ jobs, onStatusChange, onClick }: Props) {
                 <div>
                   <div className="font-bold">{job.jobType}</div>
                   <div className="text-sm text-gray-500">Job ID: {job.id}</div>
-                  <div className="text-sm">Technician: {job.technician}</div>
                   <div className="text-sm">{job.address}</div>
                   <div className="text-sm">{job.startDate}</div>
+                  <div className="text-sm">Technician: {job.technician}</div>
                 </div>
                 
                 <div className="flex gap-2">

@@ -111,26 +111,28 @@ export default function CreateJobModal({
           <JobDetailsFieldset register={register} errors={errors} />
           <ServiceLocationFieldset register={register} errors={errors} />
           <SchedulingFieldset register={register} errors={errors} />
-          {error && (
-            <p className="text-red-500">
-              {error}
-            </p>
-          )}
 
-          {success && (
-            <p className="text-green-600">
-              Job created successfully
-            </p>
-          )}
+          <div className="flex-1 flex gap-2">
+            <button
+              disabled={isSubmitting}
+              className="bg-black text-white px-4 py-2 rounded disabled:opacity-50 w-35"
+            >
+              {isSubmitting
+                ? "Creating..."
+                : "Create Job"}
+            </button>
+            {error && (
+              <p className="text-red-500 py-2">
+                {error}
+              </p>
+            )}
 
-          <button
-            disabled={isSubmitting}
-            className="bg-black text-white px-4 py-2 rounded disabled:opacity-50"
-          >
-            {isSubmitting
-              ? "Creating..."
-              : "Create Job"}
-          </button>
+            {success && (
+              <p className="text-green-600 py-2">
+                Job created successfully
+              </p>
+            )}
+          </div>
         </form>
       </div>
     </div>

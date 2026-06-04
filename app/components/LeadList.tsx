@@ -27,24 +27,29 @@ export default function LeadList({
           Create lead
         </button>
       </div>
-      <div className="space-y-2">
-        {leads.map((lead) => (
-          <button
-            key={lead.id}
-            onClick={() => onSelect(lead)}
-            className={`w-full text-left p-3 rounded border ${
-              selectedLead?.id === lead.id
-                ? "bg-gray-100"
-                : ""
-            }`}
-          >
-            <div>
-              {lead.firstName} {lead.lastName}
-            </div>
-            
-          </button>
-        ))}
-      </div>
+
+      {leads.length === 0 ? (
+        <p className="text-gray-500">No leads yet</p>
+      ) : (
+        <div className="space-y-2">
+          {leads.map((lead) => (
+            <button
+              key={lead.id}
+              onClick={() => onSelect(lead)}
+              className={`w-full text-left p-3 rounded border ${
+                selectedLead?.id === lead.id
+                  ? "bg-gray-100"
+                  : ""
+              }`}
+            >
+              <div>
+                {lead.firstName} {lead.lastName}
+              </div>
+              
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

@@ -22,20 +22,14 @@ export async function runJobAutomation(
   try {
     await sendSlackMessage(`
       ${eventType}
-
       Job ID: ${job.id}
-
-      Customer:
-      ${job.lead.firstName} ${job.lead.lastName}
-
-      Phone:
-      ${job.lead.phone}
-
-      Job Type:
-      ${job.jobType}
-
-      Status:
-      ${job.status}
+      Customer: ${job.lead.firstName} ${job.lead.lastName}
+      Phone: ${job.lead.phone}
+      Job type: ${job.jobType}
+      Status: ${job.status}
+      Technician: ${job.technician}
+      Address: ${job.address}
+      Start date: ${job.startDate}
     `);
 
     await prisma.eventLog.create({

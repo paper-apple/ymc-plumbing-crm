@@ -113,7 +113,7 @@ export default function Home() {
   }, [jobs]);
 
   return (
-    <main className="grid grid-cols-[320px_320px_2fr_1fr] h-screen overflow-y-hidden">
+    <main className="grid grid-cols-[300px_300px_610px_1fr] h-screen overflow-y-hidden">
       <LeadList
         leads={leads}
         selectedLead={selectedLead}
@@ -122,12 +122,11 @@ export default function Home() {
       />
 
       <div className="p-4 border-r">
+        <h1 className="font-bold text-xl">
+          Lead Details
+        </h1>
         {selectedLead ? (
           <>
-            <h1 className="font-bold text-xl">
-              Lead Details
-            </h1>
-
             <div className="mt-6 space-y-2">
               <p>
                 <strong>Name:</strong>{" "}
@@ -147,7 +146,7 @@ export default function Home() {
             </div>
           </>
         ) : (
-          <p>Select a lead</p>
+          <p className="text-gray-500 pt-5">No leads yet</p>
         )}
       </div>
       <div>

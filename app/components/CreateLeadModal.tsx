@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createLeadSchema, CreateLeadFormData} from "@/schemas/createLeadSchema";
 import FieldWrapper from "./fields/FieldWrapper";
-import { getFieldClasses } from "@/lib/fieldClasses";
+import { getFieldClasses } from "@/utils/fieldClasses";
 
 interface Props {
   open: boolean;
@@ -59,6 +59,7 @@ export default function CreateLeadModal({
 
       setTimeout(() => {
         onClose();
+        setSuccess(false);
       }, 1000);
     } catch {
       setError(
@@ -128,28 +129,30 @@ export default function CreateLeadModal({
             />
           </FieldWrapper>
 
-          {error && (
-            <p className="text-red-500">
-              {error}
-            </p>
-          )}
+          <div className="flex-1 flex gap-2">
+            <button
+              disabled={
+                isSubmitting
+              }
+              className="bg-black text-white px-4 py-2 rounded disabled:opacity-50 w-35"
+            >
+              {isSubmitting
+                ? "Creating..."
+                : "Create Lead"}
+            </button>
+            {error && (
+              <p className="text-red-500 py-2">
+                {error}
+              </p>
+            )}
 
-          {success && (
-            <p className="text-green-600">
-              Lead created successfully
-            </p>
-          )}
+            {success && (
+              <p className="text-green-600 py-2">
+                Lead created successfully
+              </p>
+            )}
 
-          <button
-            disabled={
-              isSubmitting
-            }
-            className="bg-black text-white px-4 py-2 rounded"
-          >
-            {isSubmitting
-              ? "Creating..."
-              : "Create Lead"}
-          </button>
+          </div>
         </form>
       </div>
     </div>

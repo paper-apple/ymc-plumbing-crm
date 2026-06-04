@@ -1,5 +1,5 @@
 import FieldWrapper from "./FieldWrapper";
-import { getFieldClasses } from "@/lib/fieldClasses";
+import { getFieldClasses } from "@/utils/fieldClasses";
 
 export default function ServiceLocationFieldset({ register, errors }: { register: any, errors: any }) {
   return (
